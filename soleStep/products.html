@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop Shoes - SoleStep</title>
+  <meta name="description" content="Browse our full collection of premium shoes. Filter by category, sort by price or rating."/>
+  <meta property="og:title" content="Shop Shoes - SoleStep"/>
+  <meta property="og:description" content="Browse our full collection of premium footwear. Search, filter, and sort to find your perfect pair."/>
+  <meta property="og:type" content="website"/>
+  <link rel="stylesheet" href="css/global.css"/>
+  <link rel="stylesheet" href="css/header.css"/>
+  <link rel="stylesheet" href="css/footer.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    /* reuse product card styles inline */
+    .product-card{background:#fff;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--border);transition:all .25s ease;}
+    .product-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px);}
+    .product-card-img-wrap{position:relative;aspect-ratio:1;overflow:hidden;background:var(--surface-alt);}
+    .product-card-img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
+    .product-card:hover .product-card-img{transform:scale(1.05);}
+    .product-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:999px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+    .badge-best-seller,.badge-premium{background:var(--primary);color:#fff;}
+    .badge-sale{background:var(--accent);color:#fff;}
+    .badge-new{background:#10B981;color:#fff;}
+    .product-out-of-stock-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;}
+    .product-out-of-stock-overlay span{background:#fff;color:var(--primary);font-size:.75rem;font-weight:700;padding:6px 14px;border-radius:999px;}
+    .product-quick-add{position:absolute;bottom:12px;left:12px;right:12px;opacity:0;transform:translateY(8px);transition:all .2s ease;padding:10px;font-size:.75rem;}
+    .product-card:hover .product-quick-add{opacity:1;transform:translateY(0);}
+    .product-quick-add.disabled{opacity:.4!important;cursor:not-allowed;}
+    .product-card-body{padding:var(--space-md);}
+    .product-card-meta{display:flex;justify-content:space-between;margin-bottom:4px;}
+    .product-brand{font-size:.72rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;}
+    .product-category{font-size:.72rem;color:var(--muted);}
+    .product-name{display:block;font-size:.95rem;font-weight:700;color:var(--primary);margin-bottom:6px;text-decoration:none;line-height:1.3;}
+    .product-name:hover{color:var(--accent);}
+    .product-rating{display:flex;align-items:center;gap:4px;margin-bottom:8px;}
+    .stars{display:flex;gap:1px;}
+    .star{font-size:.8rem;color:#F59E0B;}
+    .star-empty{color:#D1D5DB;}
+    .star-half{color:#F59E0B;opacity:.5;}
+    .product-review-count{font-size:.72rem;color:var(--muted);}
+    .product-pricing{display:flex;align-items:center;gap:8px;}
+    .product-price{font-size:1.05rem;font-weight:800;color:var(--primary);}
+    .product-price-original{font-size:.82rem;color:var(--muted);text-decoration:line-through;}
+    .product-discount{font-size:.72rem;font-weight:700;color:var(--accent);background:rgba(230,57,70,.1);padding:2px 6px;border-radius:4px;}
+    .skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-md);}
+    @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+    .skeleton-card{background:#fff;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--border);}
+    .skeleton-img{height:260px;border-radius:0;}
+    .skeleton-body{padding:var(--space-md);display:flex;flex-direction:column;gap:8px;}
+    .skeleton-text{height:12px;border-radius:4px;width:80%;}
+    .skeleton-text-sm{width:50%;}
+    .skeleton-text-price{width:40%;height:18px;}
+    .empty-state{text-align:center;padding:var(--space-2xl) var(--space-lg);}
+    .empty-state-emoji{font-size:4rem;margin-bottom:var(--space-md);}
+    .empty-state-title{font-size:1.5rem;font-weight:700;margin-bottom:var(--space-sm);}
+    .empty-state-message{color:var(--muted);margin-bottom:var(--space-lg);}
+    /* Page layout */
+    .products-page{display:block;padding:var(--space-xl) 0;}
+    .products-grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-md); }
+    /* Sidebar filters */
+    .filter-sidebar{position:sticky;top:88px;height:fit-content;}
+    .filter-panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-lg);margin-bottom:var(--space-md);}
+    .filter-title{font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:var(--space-md);padding-bottom:var(--space-sm);border-bottom:2px solid var(--accent);}
+    .filter-options{display:flex;flex-direction:column;gap:8px;}
+    .filter-option{display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px;border-radius:var(--radius-md);transition:background .15s;}
+    .filter-option:hover{background:var(--surface-alt);}
+    .filter-option input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;}
+    .filter-option label{font-size:.875rem;cursor:pointer;flex:1;}
+    .filter-option .filter-count{font-size:.72rem;color:var(--muted);margin-left:auto;}
+    .filter-clear{font-size:.75rem;color:var(--accent);font-weight:600;cursor:pointer;background:none;border:none;padding:0;margin-top:var(--space-sm);}
+    .filter-clear:hover{text-decoration:underline;}
+    .price-range-row{display:flex;gap:var(--space-sm);align-items:center;}
+    .price-input{width:90px;padding:8px 10px;border:1.5px solid var(--border-dark);border-radius:var(--radius-md);font-size:.85rem;text-align:center;}
+    .price-input:focus{border-color:var(--accent);outline:none;}
+    /* Toolbar */
+    .products-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-lg);flex-wrap:wrap;gap:var(--space-md);}
+    .products-count{font-size:.9rem;color:var(--muted);}
+    .products-count strong{color:var(--primary);}
+    .toolbar-right{display:flex;align-items:center;gap:var(--space-md);}
+    .sort-select{padding:9px 14px;border:1.5px solid var(--border-dark);border-radius:var(--radius-md);font-size:.85rem;font-family:inherit;background:#fff;cursor:pointer;color:var(--primary);}
+    .sort-select:focus{border-color:var(--accent);outline:none;}
+    .view-toggle{display:flex;border:1.5px solid var(--border-dark);border-radius:var(--radius-md);overflow:hidden;}
+    .view-btn{padding:7px 12px;background:none;border:none;cursor:pointer;color:var(--muted);font-size:1rem;transition:all .15s;}
+    .view-btn.active{background:var(--primary);color:#fff;}
+    /* Search bar */
+    .search-bar-wrap{position:relative;margin-bottom:var(--space-lg);}
+    .search-bar-input{width:100%;padding:14px 16px 14px 44px;border:1.5px solid var(--border-dark);border-radius:var(--radius-lg);font-size:.95rem;font-family:inherit;transition:all .2s;background:#fff;}
+    .search-bar-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(230,57,70,.1);outline:none;}
+    .search-bar-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;}
+    /* Active filters */
+    .active-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:var(--space-md);}
+    .filter-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(230,57,70,.08);color:var(--accent);border:1px solid rgba(230,57,70,.2);border-radius:999px;padding:4px 10px;font-size:.75rem;font-weight:600;}
+    .filter-tag-remove{cursor:pointer;font-size:.8rem;line-height:1;opacity:.7;}
+    .filter-tag-remove:hover{opacity:1;}
+    /* Mobile filter toggle */
+    .mobile-filter-btn{display:none;align-items:center;gap:6px;padding:9px 14px;border:1.5px solid var(--border-dark);border-radius:var(--radius-md);background:#fff;font-size:.85rem;font-weight:600;cursor:pointer;}
+    @media(max-width:1024px){.products-page{grid-template-columns:220px 1fr;gap:var(--space-lg);}}
+    @media(max-width:768px){
+      .products-page{grid-template-columns:1fr;}
+      .filter-sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;z-index:var(--z-overlay);background:#fff;padding:var(--space-lg);overflow-y:auto;transform:translateX(-100%);transition:transform .3s ease;box-shadow:var(--shadow-xl);}
+      .filter-sidebar.open{transform:translateX(0);}
+      .mobile-filter-btn{display:flex;}
+    }
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:var(--z-modal);display:flex;align-items:center;justify-content:center;padding:var(--space-md);}
+    .modal-content{background:#fff;border-radius:var(--radius-2xl);width:100%;max-width:520px;overflow:hidden;box-shadow:var(--shadow-xl);}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:var(--space-lg);border-bottom:1px solid var(--border);}
+    .modal-title{font-size:1.1rem;font-weight:700;}
+    .modal-close{background:none;border:none;font-size:1rem;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:var(--radius-sm);}
+    .modal-body{padding:var(--space-lg);}
+    .modal-footer{padding:var(--space-md) var(--space-lg);border-top:1px solid var(--border);display:flex;gap:var(--space-sm);justify-content:flex-end;}
+    .toast{position:fixed;bottom:var(--space-lg);right:var(--space-lg);z-index:500;background:var(--primary);color:#fff;padding:var(--space-md) var(--space-lg);border-radius:var(--radius-md);font-size:var(--font-size-sm);font-weight:500;box-shadow:var(--shadow-xl);transform:translateY(100px);opacity:0;transition:all .25s ease;max-width:360px;}
+    .toast.toast-show{transform:translateY(0);opacity:1;}
+    .toast-success{border-left:4px solid #10B981;}
+    .toast-error{border-left:4px solid var(--accent);}
+    .toast-info{border-left:4px solid #3B82F6;}
+  </style>
+</head>
+<body>
+
+<input type="checkbox" id="hamburger-toggle" class="hamburger-checkbox">
+<header class="site-header" id="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo">
+        <span class="header-logo-emoji"><i class="fa-solid fa-shoe-prints"></i></span>
+        <span class="header-logo-text">Sole<span>Step</span></span>
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="index.html"    class="nav-link">Home</a>
+        <a href="products.html" class="nav-link active" aria-current="page">Shop</a><a href="about.html" class="nav-link">About</a><a href="contact.html" class="nav-link">Contact</a>
+        <a href="cart.html"     class="nav-link nav-link-cart" aria-label="Shopping cart">
+          <span class="cart-icon"><i class="fa-solid fa-cart-shopping"></i></span> Cart
+          <span class="badge cart-count-badge" style="display:none">0</span>
+        </a>
+      </nav>
+      <div class="header-actions">
+        <div id="header-user-chip" style="display:none;align-items:center;gap:6px;font-size:.85rem;font-weight:600;"><i class="fa-solid fa-user"></i> <span class="user-name"></span></div>
+        <a href="register.html" id="header-register-btn" class="btn-auth btn-auth-primary">Sign up</a>
+        <a href="login.html" id="header-login-btn" class="btn-auth">Login</a>
+        <button id="header-logout-btn" class="btn-auth btn-logout" style="display:none">Logout</button>
+      </div>
+      <label for="hamburger-toggle" class="hamburger-label"><span></span><span></span><span></span></label>
+    </div>
+  </div>
+</header>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="index.html"    class="mobile-nav-link"><i class="fa-solid fa-house"></i> Home</a>
+  <a href="products.html" class="mobile-nav-link" aria-current="page"><i class="fa-solid fa-shoe-prints"></i> Shop</a><a href="about.html" class="mobile-nav-link"><i class="fa-solid fa-circle-info"></i> About</a><a href="contact.html" class="mobile-nav-link"><i class="fa-solid fa-envelope"></i> Contact</a>
+  <a href="cart.html"     class="mobile-nav-link" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping"></i> Cart <span class="badge cart-count-badge" style="display:none">0</span></a>
+  <div class="mobile-nav-divider"></div>
+  <div class="mobile-nav-actions">
+    <a href="register.html" id="mobile-register-btn" class="btn-primary">Sign up</a>
+    <a href="login.html" id="mobile-login-btn" class="btn-secondary">Login</a>
+    <button id="mobile-logout-btn" class="btn-secondary" style="display:none">Logout</button>
+  </div>
+</nav>
+
+<div style="background:#fff;border-bottom:1px solid var(--border);padding:var(--space-lg) 0;">
+  <div class="container">
+    <nav style="font-size:.8rem;color:var(--muted);margin-bottom:var(--space-sm);">
+      <a href="index.html" style="color:var(--muted);text-decoration:none;">Home</a>
+      <span style="margin:0 6px;">›</span>
+      <span style="color:var(--primary);font-weight:600;">Shop</span>
+    </nav>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:var(--space-md);">
+      <div>
+        <h1 style="font-size:2rem;margin-bottom:4px;">Shop Shoes</h1>
+        <p style="color:var(--muted);font-size:.9rem;">Discover our full collection of premium shoes</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <div class="products-page">
+
+      <div class="products-main">
+        <div class="search-bar-wrap">
+          <span class="search-bar-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          <input type="search" class="search-bar-input" id="products-search" placeholder="Search shoes, styles, brands…" oninput="debouncedFilter()" aria-label="Search products">
+        </div>
+
+        <div class="active-filters" id="active-filters"></div>
+
+        <div class="products-toolbar">
+          <p class="products-count">Showing <strong id="product-count">0</strong> products</p>
+          <div class="toolbar-right">
+            <select class="sort-select" id="sort-select" onchange="debouncedFilter()" aria-label="Sort products">
+              <option value="">Sort: Featured</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Name: A-Z</option>
+            </select>
+            <div class="view-toggle" role="group" aria-label="View mode">
+              <button class="view-btn active" id="view-grid-btn" onclick="setView('grid')" aria-label="Grid view">⊞</button>
+              <button class="view-btn" id="view-list-btn" onclick="setView('list')" aria-label="List view">☰</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="products-grid-layout" id="products-grid"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <span class="footer-logo-emoji"><i class="fa-solid fa-shoe-prints"></i></span>
+          <span class="footer-logo-text">Sole<span>Step</span></span>
+        </a>
+        <p class="footer-tagline">Premium footwear for Nordic routines. Curated for comfort, quality, and everyday style.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-link" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-link" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Shop</h4>
+        <nav class="footer-nav">
+          <a href="products.html" class="footer-nav-link">Shop</a>
+          <a href="products.html?category=Running" class="footer-nav-link">Running</a>
+          <a href="products.html?category=Casual" class="footer-nav-link">Casual</a>
+          <a href="products.html?category=Boots" class="footer-nav-link">Boots</a>
+          <a href="products.html?category=Formal" class="footer-nav-link">Formal</a>
+        </nav>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Account</h4>
+        <nav class="footer-nav">
+          <a href="login.html" class="footer-nav-link">Login</a>
+          <a href="register.html" class="footer-nav-link">Register</a>
+          <a href="cart.html" class="footer-nav-link">My Cart</a>
+          <a href="about.html" class="footer-nav-link">About</a>
+          <a href="contact.html" class="footer-nav-link">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-col-title">Newsletter</h4>
+        <p class="footer-newsletter-desc">Get deals, fit guidance, and new arrivals in your inbox.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault();UI.showToast('Subscribed!','success');this.reset();">
+          <div class="newsletter-input-row">
+            <input type="email" class="newsletter-input" placeholder="your@email.com" aria-label="Email for newsletter" required>
+            <button type="submit" class="newsletter-btn">Go</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">&copy; 2026 <span>SoleStep</span>. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="about.html" class="footer-bottom-link">About</a>
+        <a href="contact.html" class="footer-bottom-link">Contact</a>
+        <a href="#" class="footer-bottom-link">Privacy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  document.getElementById('newsletter-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    window.UI.showToast('Subscribed successfully!', 'success');
+    this.reset();
+  });
+</script>
+<script>
+  let allProducts = [];
+  let debounceTimer = null;
+  let currentView = 'grid';
+
+  // Read URL params on load
+  function readUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    let search = params.get('search');
+    const category = params.get('category');
+    
+    // If arriving from a category link, pre-fill search with that category
+    if (category && !search) {
+      search = category;
+    }
+    
+    if (search) document.getElementById('products-search').value = search;
+    
+    const sort = params.get('sort');
+    if (sort) document.getElementById('sort-select').value = sort;
+  }
+
+  async function loadProducts() {
+    const grid = document.getElementById('products-grid');
+    grid.innerHTML = UI.renderSkeletons(8);
+    try {
+      allProducts = await window.API.getAllProducts();
+      window.applyClientFilters();
+    } catch(e) {
+      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted);padding:64px 0;">Could not load shoes. Try refreshing.</p>';
+    }
+  }
+
+  window.applyClientFilters = function() {
+    let filtered = [...allProducts];
+    const search = document.getElementById('products-search')?.value.toLowerCase() || '';
+    const sort   = document.getElementById('sort-select')?.value || '';
+
+    if (search) {
+      filtered = filtered.filter(p => 
+        p.title?.toLowerCase().includes(search) || 
+        (p.tags && p.tags.some(t => t.toLowerCase().includes(search)))
+      );
+    }
+
+    if (sort === 'price-asc')  {
+      filtered.sort((a,b) => (a.discountedPrice || a.price) - (b.discountedPrice || b.price));
+    }
+    if (sort === 'price-desc') {
+      filtered.sort((a,b) => (b.discountedPrice || b.price) - (a.discountedPrice || a.price));
+    }
+    if (sort === 'name-asc') {
+      filtered.sort((a,b) => (a.title || '').localeCompare(b.title || ''));
+    }
+
+    document.getElementById('product-count').textContent = filtered.length;
+    UI.renderProductGrid(document.getElementById('products-grid'), filtered);
+  }
+
+  window.debouncedFilter = function() { clearTimeout(debounceTimer); debounceTimer = setTimeout(window.applyClientFilters, 250); }
+
+  window.setView = function(v) {
+    currentView = v;
+    const grid = document.getElementById('products-grid');
+    document.getElementById('view-grid-btn').classList.toggle('active', v==='grid');
+    document.getElementById('view-list-btn').classList.toggle('active', v==='list');
+    grid.className = v === 'grid' ? 'products-grid-layout' : '';
+    if (v === 'list') grid.style.cssText = 'display:flex;flex-direction:column;gap:var(--space-md)';
+    else grid.style.cssText = '';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { readUrlParams(); loadProducts(); });
+</script>
+</body>
+</html>
