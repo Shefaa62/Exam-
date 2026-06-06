@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>About - SoleStep</title>
+  <meta name="description" content="Learn about SoleStep, a Norwegian-focused footwear store for everyday comfort, quality, and style."/>
+  <link rel="stylesheet" href="css/global.css"/>
+  <link rel="stylesheet" href="css/header.css"/>
+  <link rel="stylesheet" href="css/footer.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    .eyebrow{display:inline-flex;color:var(--accent);font-size:.75rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;margin-bottom:var(--space-sm);}
+    .about-hero{background:#101010;color:#fff;padding:var(--space-2xl) 0;overflow:hidden;}
+    .about-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,500px);gap:var(--space-2xl);align-items:center;}
+    .about-hero h1{color:#fff;font-size:clamp(2.6rem,6vw,5rem);font-weight:900;line-height:.98;letter-spacing:-.05em;max-width:760px;}
+    .about-hero p{color:rgba(255,255,255,.68);font-size:1.08rem;max-width:620px;margin:var(--space-md) 0 var(--space-lg);}
+    .hero-actions{display:flex;gap:var(--space-md);flex-wrap:wrap;}
+    .hero-media{position:relative;border-radius:28px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.38);border:1px solid rgba(255,255,255,.14);}
+    .hero-media img{width:100%;aspect-ratio:4/5;object-fit:cover;}
+    .hero-media-note{position:absolute;left:18px;right:18px;bottom:18px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-radius:18px;padding:var(--space-md);display:flex;justify-content:space-between;gap:var(--space-md);align-items:center;}
+    .hero-media-note strong{display:block;color:var(--primary);}
+    .hero-media-note span{font-size:.84rem;color:var(--muted);}
+    .stats-band{background:#fff;border-bottom:1px solid var(--border);}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);padding:var(--space-lg) 0;}
+    .stat-item{border-left:1px solid var(--border);padding-left:var(--space-md);}
+    .stat-item:first-child{border-left:none;padding-left:0;}
+    .stat-num{font-size:2rem;font-weight:900;color:var(--primary);line-height:1;}
+    .stat-label{font-size:.86rem;color:var(--muted);margin-top:6px;}
+    .intro-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:var(--space-2xl);align-items:start;}
+    .intro-copy h2,.quality-copy h2,.team-head h2{font-size:clamp(2rem,4vw,3.25rem);font-weight:900;letter-spacing:-.045em;margin-bottom:var(--space-md);}
+    .intro-copy p{font-size:1rem;margin-bottom:var(--space-md);}
+    .selection-list{display:grid;gap:var(--space-md);}
+    .selection-item{display:grid;grid-template-columns:48px 1fr;gap:var(--space-md);align-items:start;background:#fff;border:1px solid var(--border);border-radius:18px;padding:var(--space-md);}
+    .selection-number{width:48px;height:48px;border-radius:14px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;}
+    .selection-item h3{font-size:1rem;margin-bottom:4px;}
+    .selection-item p{font-size:.9rem;}
+    .quality-section{background:var(--surface-alt);}
+    .quality-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--space-xl);align-items:center;}
+    .quality-image{border-radius:28px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-lg);}
+    .quality-image img{width:100%;aspect-ratio:16/11;object-fit:cover;}
+    .quality-points{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-md);margin-top:var(--space-lg);}
+    .quality-point{background:#fff;border:1px solid var(--border);border-radius:16px;padding:var(--space-md);}
+    .quality-point i{color:var(--accent);font-size:1.25rem;margin-bottom:var(--space-sm);}
+    .quality-point strong{display:block;color:var(--primary);margin-bottom:4px;}
+    .quality-point span{font-size:.86rem;color:var(--muted);}
+    .team-section{background:#111;color:#fff;}
+    .team-head{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--space-xl);margin-bottom:var(--space-lg);}
+    .team-head h2{color:#fff;margin-bottom:0;}
+    .team-head p{max-width:440px;color:rgba(255,255,255,.62);}
+    .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-md);}
+    .team-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;overflow:hidden;}
+    .team-card img{width:100%;aspect-ratio:4/3;object-fit:cover;filter:saturate(.9);}
+    .team-card-body{padding:var(--space-md);}
+    .team-card h3{font-size:1.05rem;color:#fff;margin-bottom:4px;}
+    .team-card p{font-size:.9rem;color:rgba(255,255,255,.62);}
+    .cta-band{background:#fff;}
+    .cta-panel{background:var(--primary);border-radius:28px;padding:var(--space-xl);display:flex;align-items:center;justify-content:space-between;gap:var(--space-lg);overflow:hidden;}
+    .cta-panel h2{color:#fff;font-size:2rem;font-weight:900;margin-bottom:8px;}
+    .cta-panel p{color:rgba(255,255,255,.62);max-width:560px;}
+    @media(max-width:980px){.about-hero-grid,.intro-grid,.quality-grid{grid-template-columns:1fr}.team-head{display:block}.team-head p{margin-top:var(--space-md)}.stats-grid{grid-template-columns:repeat(2,1fr)}.stat-item:nth-child(3){border-left:none;padding-left:0}}
+    @media(max-width:680px){.team-grid,.quality-points{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr}.stat-item{border-left:none;border-top:1px solid var(--border);padding:var(--space-md) 0 0}.stat-item:first-child{border-top:none;padding-top:0}.cta-panel{display:block}.cta-panel .btn-primary{margin-top:var(--space-md)}}
+  </style>
+</head>
+<body>
+<input type="checkbox" id="hamburger-toggle" class="hamburger-checkbox">
+<header class="site-header"><div class="container"><div class="header-inner">
+  <a href="index.html" class="header-logo" aria-label="SoleStep Home"><span class="header-logo-emoji"><i class="fa-solid fa-shoe-prints"></i></span><span class="header-logo-text">Sole<span>Step</span></span></a>
+  <nav class="header-nav" aria-label="Main navigation"><a href="index.html" class="nav-link">Home</a><a href="products.html" class="nav-link">Shop</a><a href="about.html" class="nav-link active" aria-current="page">About</a><a href="contact.html" class="nav-link">Contact</a><a href="cart.html" class="nav-link nav-link-cart" aria-label="Shopping cart"><span class="cart-icon"><i class="fa-solid fa-cart-shopping"></i></span> Cart<span class="badge cart-count-badge" style="display:none">0</span></a></nav>
+  <div class="header-actions"><div id="header-user-chip" style="display:none;align-items:center;gap:6px;font-size:.85rem;font-weight:600;"><i class="fa-solid fa-user"></i> <span class="user-name"></span></div><a href="register.html" id="header-register-btn" class="btn-auth btn-auth-primary">Sign up</a><a href="login.html" id="header-login-btn" class="btn-auth">Login</a><button id="header-logout-btn" class="btn-auth btn-logout" style="display:none">Logout</button></div>
+  <label for="hamburger-toggle" class="hamburger-label"><span></span><span></span><span></span></label>
+</div></div></header>
+<nav class="mobile-nav" aria-label="Mobile navigation"><a href="index.html" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Home</a><a href="products.html" class="mobile-nav-link"><i class="fa-solid fa-shoe-prints"></i> Shop</a><a href="about.html" class="mobile-nav-link" aria-current="page"><i class="fa-solid fa-circle-info"></i> About</a><a href="contact.html" class="mobile-nav-link"><i class="fa-solid fa-envelope"></i> Contact</a><a href="cart.html" class="mobile-nav-link"><i class="fa-solid fa-cart-shopping"></i> Cart <span class="badge cart-count-badge" style="display:none">0</span></a><div class="mobile-nav-divider"></div><div class="mobile-nav-actions"><a href="register.html" id="mobile-register-btn" class="btn-primary">Sign up</a><a href="login.html" id="mobile-login-btn" class="btn-secondary">Login</a><button id="mobile-logout-btn" class="btn-secondary" style="display:none">Logout</button></div></nav>
+
+<main>
+  <section class="about-hero">
+    <div class="container about-hero-grid">
+      <div>
+        <span class="eyebrow">Norwegian footwear curation</span>
+        <h1>Built around better shoes, not bigger shelves.</h1>
+        <p>SoleStep curates dependable footwear for Nordic routines: wet pavements, office days, weekend travel, long walks, and the daily movement between them.</p>
+        <div class="hero-actions">
+          <a href="products.html" class="btn-primary">Shop Shoes</a>
+          <a href="contact.html" class="btn-secondary" style="border-color:rgba(255,255,255,.38);color:#fff;">Ask Our Team</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=1000&q=80" alt="Premium shoes on display">
+        <div class="hero-media-note">
+          <div><strong>Oslo-based service</strong><span>Fit guidance and support for Norwegian customers.</span></div>
+          <i class="fa-solid fa-location-dot" style="color:var(--accent);"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-band">
+    <div class="container stats-grid">
+      <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">Focused footwear categories</div></div>
+      <div class="stat-item"><div class="stat-num">30</div><div class="stat-label">Day return window</div></div>
+      <div class="stat-item"><div class="stat-num">2-4</div><div class="stat-label">Business day delivery</div></div>
+      <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Shoe-only catalog</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container intro-grid">
+      <div class="intro-copy">
+        <span class="eyebrow">Our approach</span>
+        <h2>Selection with a point of view.</h2>
+        <p>We keep the catalog intentionally tight. Every product is assessed for material quality, comfort, grip, versatility, and how naturally it fits into everyday Norwegian life.</p>
+        <p>The goal is simple: help customers buy fewer disappointing pairs and choose shoes they will actually wear.</p>
+      </div>
+      <div class="selection-list">
+        <div class="selection-item"><span class="selection-number">01</span><div><h3>Fit before hype</h3><p>We prioritize shape, comfort, and supportive construction before trend value.</p></div></div>
+        <div class="selection-item"><span class="selection-number">02</span><div><h3>Weather awareness</h3><p>Grip, materials, and durability matter when the forecast changes quickly.</p></div></div>
+        <div class="selection-item"><span class="selection-number">03</span><div><h3>Clear categories</h3><p>Running, casual, formal, boots, and outdoor styles stay easy to compare.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section quality-section">
+    <div class="container quality-grid">
+      <div class="quality-image"><img src="https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=1000&q=80" alt="Shoe craftsmanship close-up"></div>
+      <div class="quality-copy">
+        <span class="eyebrow">Quality standards</span>
+        <h2>Every pair earns its place.</h2>
+        <p>Our product checks are designed around real use, not showroom perfection. We look for finish, comfort, cushioning, sole behavior, and whether the shoe solves a clear need.</p>
+        <div class="quality-points">
+          <div class="quality-point"><i class="fa-solid fa-shield-heart"></i><strong>Comfort checked</strong><span>Cushioning, structure, and upper feel are reviewed.</span></div>
+          <div class="quality-point"><i class="fa-solid fa-cloud-rain"></i><strong>Nordic ready</strong><span>Styles are chosen with seasonal routines in mind.</span></div>
+          <div class="quality-point"><i class="fa-solid fa-ruler"></i><strong>Fit guidance</strong><span>Clear size advice and help from our customer team.</span></div>
+          <div class="quality-point"><i class="fa-solid fa-rotate-left"></i><strong>Easy returns</strong><span>Customers get time to make sure the fit is right.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section team-section">
+    <div class="container">
+      <div class="team-head">
+        <div>
+          <span class="eyebrow">Our team</span>
+          <h2>People behind the pairs.</h2>
+        </div>
+        <p>Buying, fit guidance, and customer care work together so each style is easy to understand before it reaches your cart.</p>
+      </div>
+      <div class="team-grid">
+        <article class="team-card"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=700&q=80" alt="Henrik Solberg"><div class="team-card-body"><h3>Henrik Solberg</h3><p>Category lead for sneakers and running shoes.</p></div></article>
+        <article class="team-card"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=700&q=80" alt="Ingrid Dahl"><div class="team-card-body"><h3>Ingrid Dahl</h3><p>Customer experience and fit guidance.</p></div></article>
+        <article class="team-card"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=700&q=80" alt="Marius Lund"><div class="team-card-body"><h3>Marius Lund</h3><p>Boots, formal shoes, and leather finishes.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-band">
+    <div class="container">
+      <div class="cta-panel">
+        <div>
+          <h2>Find the pair that fits your week.</h2>
+          <p>Explore a focused selection of sneakers, boots, formal shoes, and outdoor styles curated for comfort and everyday reliability.</p>
+        </div>
+        <a href="products.html" class="btn-primary">Shop Shoes</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <span class="footer-logo-emoji"><i class="fa-solid fa-shoe-prints"></i></span>
+          <span class="footer-logo-text">Sole<span>Step</span></span>
+        </a>
+        <p class="footer-tagline">Premium footwear for Nordic routines. Curated for comfort, quality, and everyday style.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-link" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-link" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Shop</h4>
+        <nav class="footer-nav">
+          <a href="products.html" class="footer-nav-link">Shop</a>
+          <a href="products.html?category=Running" class="footer-nav-link">Running</a>
+          <a href="products.html?category=Casual" class="footer-nav-link">Casual</a>
+          <a href="products.html?category=Boots" class="footer-nav-link">Boots</a>
+          <a href="products.html?category=Formal" class="footer-nav-link">Formal</a>
+        </nav>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Account</h4>
+        <nav class="footer-nav">
+          <a href="login.html" class="footer-nav-link">Login</a>
+          <a href="register.html" class="footer-nav-link">Register</a>
+          <a href="cart.html" class="footer-nav-link">My Cart</a>
+          <a href="about.html" class="footer-nav-link">About</a>
+          <a href="contact.html" class="footer-nav-link">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-col-title">Newsletter</h4>
+        <p class="footer-newsletter-desc">Get deals, fit guidance, and new arrivals in your inbox.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault();UI.showToast('Subscribed!','success');this.reset();">
+          <div class="newsletter-input-row">
+            <input type="email" class="newsletter-input" placeholder="your@email.com" aria-label="Email for newsletter" required>
+            <button type="submit" class="newsletter-btn">Go</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">&copy; 2026 <span>SoleStep</span>. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="about.html" class="footer-bottom-link">About</a>
+        <a href="contact.html" class="footer-bottom-link">Contact</a>
+        <a href="#" class="footer-bottom-link">Privacy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="js/cart.js"></script><script src="js/auth.js"></script><script src="js/ui.js"></script>
+</body>
+</html>

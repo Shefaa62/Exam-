@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SoleStep — Premium Footwear</title>
+  <meta name="description" content="Discover premium footwear at SoleStep. Shop running, casual, formal and outdoor shoes with free shipping over $100."/>
+  <meta property="og:title" content="SoleStep — Premium Footwear"/>
+  <meta property="og:description" content="Walk in Style. Premium footwear crafted for every stride. Free shipping over $100."/>
+  <meta property="og:type" content="website"/>
+  <link rel="stylesheet" href="css/global.css"/>
+  <link rel="stylesheet" href="css/header.css"/>
+  <link rel="stylesheet" href="css/footer.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    /* Hero */
+    .hero{position:relative;min-height:min(760px,calc(92vh - 68px));display:flex;align-items:stretch;background:#111;overflow:hidden;}
+    .hero-bg{position:absolute;inset:0;background-image:radial-gradient(circle at 72% 34%,rgba(239,56,72,.22),transparent 28%),linear-gradient(90deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.62) 34%,rgba(0,0,0,.14) 64%,rgba(0,0,0,.42) 100%),linear-gradient(to top,rgba(0,0,0,.84),transparent 44%),url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1800&q=85');background-size:cover;background-position:center right;transform:scale(1.02);}
+    .hero .container{position:relative;z-index:1;display:flex;width:100%;}.hero-layout{width:100%;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(64px,8vh,96px) 0 30px;}
+    .hero-content{max-width:760px;}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:.75rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-bottom:var(--space-md);backdrop-filter:blur(14px);}
+    .hero h1{font-size:clamp(3.2rem,8vw,7.6rem);font-weight:900;color:#fff;line-height:.9;letter-spacing:-.065em;margin-bottom:var(--space-md);max-width:880px;}
+    .hero h1 span{color:var(--accent);}
+    .hero-sub{font-size:clamp(1rem,1.8vw,1.25rem);color:rgba(255,255,255,.78);margin-bottom:var(--space-lg);max-width:560px;}
+    .hero-actions{display:flex;gap:var(--space-md);flex-wrap:wrap;}
+    .hero-actions .btn-secondary{border-color:rgba(255,255,255,.42)!important;color:#fff!important;background:rgba(255,255,255,.04);backdrop-filter:blur(10px);}
+    .hero-actions .btn-secondary:hover{background:#fff;color:#111!important;border-color:#fff!important;}
+    .hero-rail{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--space-lg);align-items:end;margin-top:clamp(56px,12vh,128px);}
+    .hero-stats{display:flex;gap:0;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);backdrop-filter:blur(18px);border-radius:20px;overflow:hidden;width:max-content;max-width:100%;}
+    .hero-stats>div{padding:18px 26px;border-left:1px solid rgba(255,255,255,.12);}
+    .hero-stats>div:first-child{border-left:none;}
+    .hero-stat-num{font-size:1.65rem;font-weight:900;color:#fff;line-height:1;}
+    .hero-stat-label{font-size:.78rem;color:rgba(255,255,255,.62);margin-top:6px;}
+    .hero-feature-card{width:min(360px,100%);border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.1);backdrop-filter:blur(18px);border-radius:22px;padding:18px;color:#fff;}
+    .hero-feature-card-top{display:flex;justify-content:space-between;gap:var(--space-md);align-items:flex-start;margin-bottom:12px;}
+    .hero-feature-card h2{font-size:1.1rem;color:#fff;letter-spacing:0;margin-bottom:4px;}
+    .hero-feature-card p{font-size:.84rem;color:rgba(255,255,255,.68);}
+    .hero-price{font-size:1.45rem;font-weight:900;color:#fff;white-space:nowrap;}
+    .hero-feature-link{display:flex;align-items:center;justify-content:space-between;color:#fff;border-top:1px solid rgba(255,255,255,.14);padding-top:12px;font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;}
+    /* Categories */
+    .category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-md);}
+    .category-card{position:relative;border-radius:var(--radius-xl);overflow:hidden;aspect-ratio:3/4;cursor:pointer;text-decoration:none;}
+    .category-card img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+    .category-card:hover img{transform:scale(1.06);}
+    .category-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 55%);}
+    .category-info{position:absolute;bottom:0;left:0;right:0;padding:var(--space-md);}
+    .category-name{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px;}
+    .category-count{font-size:.78rem;color:rgba(255,255,255,.6);}
+    /* Products grid */
+    .product-card{background:#fff;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--border);transition:all .25s ease;}
+    .product-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px);}
+    .product-card-img-wrap{position:relative;aspect-ratio:1;overflow:hidden;background:var(--surface-alt);}
+    .product-card-img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
+    .product-card:hover .product-card-img{transform:scale(1.05);}
+    .product-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:999px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+    .badge-best-seller,.badge-premium{background:var(--primary);color:#fff;}
+    .badge-sale{background:var(--accent);color:#fff;}
+    .badge-new{background:#10B981;color:#fff;}
+    .product-out-of-stock-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;}
+    .product-out-of-stock-overlay span{background:#fff;color:var(--primary);font-size:.75rem;font-weight:700;padding:6px 14px;border-radius:999px;}
+    .product-quick-add{position:absolute;bottom:12px;left:12px;right:12px;opacity:0;transform:translateY(8px);transition:all .2s ease;padding:10px;font-size:.75rem;}
+    .product-card:hover .product-quick-add{opacity:1;transform:translateY(0);}
+    .product-quick-add.disabled{opacity:.4!important;cursor:not-allowed;}
+    .product-card-body{padding:var(--space-md);}
+    .product-card-meta{display:flex;justify-content:space-between;margin-bottom:4px;}
+    .product-brand{font-size:.72rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;}
+    .product-category{font-size:.72rem;color:var(--muted);}
+    .product-name{display:block;font-size:.95rem;font-weight:700;color:var(--primary);margin-bottom:6px;text-decoration:none;line-height:1.3;}
+    .product-name:hover{color:var(--accent);}
+    .product-rating{display:flex;align-items:center;gap:4px;margin-bottom:8px;}
+    .stars{display:flex;gap:1px;}
+    .star{font-size:.8rem;color:#F59E0B;}
+    .star-empty{color:#D1D5DB;}
+    .star-half{color:#F59E0B;opacity:.5;}
+    .product-review-count{font-size:.72rem;color:var(--muted);}
+    .product-pricing{display:flex;align-items:center;gap:8px;}
+    .product-price{font-size:1.05rem;font-weight:800;color:var(--primary);}
+    .product-price-original{font-size:.82rem;color:var(--muted);text-decoration:line-through;}
+    .product-discount{font-size:.72rem;font-weight:700;color:var(--accent);background:rgba(230,57,70,.1);padding:2px 6px;border-radius:4px;}
+    /* Section titles */
+    .section-header{text-align:center;margin-bottom:var(--space-lg);}
+    .section-tag{display:inline-block;background:rgba(230,57,70,.1);color:var(--accent);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:var(--space-sm);}
+    .section-header h2{margin-bottom:var(--space-sm);}
+    .section-header p{color:var(--muted);max-width:520px;margin:0 auto;}
+    /* Promo banner */
+    .promo-banner{background:linear-gradient(135deg,#111 0%,#1f1f1f 100%);border-radius:var(--radius-2xl);padding:var(--space-xl);display:grid;grid-template-columns:1fr 1fr;gap:var(--space-xl);align-items:center;overflow:hidden;position:relative;}
+    .promo-banner::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:rgba(230,57,70,.08);}
+    .promo-title{font-size:2.2rem;font-weight:900;color:#fff;line-height:1.1;margin-bottom:var(--space-md);}
+    .promo-title span{color:var(--accent);}
+    .promo-desc{color:rgba(255,255,255,.55);margin-bottom:var(--space-lg);}
+    .promo-img{border-radius:var(--radius-xl);width:100%;aspect-ratio:4/3;object-fit:cover;}
+    /* Benefits */
+    .benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-lg);}
+    .benefit-card{text-align:center;padding:var(--space-lg);}
+    .benefit-icon{font-size:2.5rem;margin-bottom:var(--space-md);}
+    .benefit-title{font-size:1rem;font-weight:700;margin-bottom:var(--space-sm);}
+    .benefit-desc{font-size:.85rem;color:var(--muted);}
+    /* Skeleton */
+    .skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-md);}
+    @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+    .skeleton-card{background:#fff;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--border);}
+    .skeleton-img{height:260px;border-radius:0;}
+    .skeleton-body{padding:var(--space-md);display:flex;flex-direction:column;gap:8px;}
+    .skeleton-text{height:12px;border-radius:4px;width:80%;}
+    .skeleton-text-sm{width:50%;}
+    .skeleton-text-price{width:40%;height:18px;}
+    /* Empty state */
+    .empty-state{text-align:center;padding:var(--space-2xl) var(--space-lg);}
+    .empty-state-emoji{font-size:4rem;margin-bottom:var(--space-md);}
+    .empty-state-title{font-size:1.5rem;font-weight:700;margin-bottom:var(--space-sm);}
+    .empty-state-message{color:var(--muted);margin-bottom:var(--space-lg);}
+    /* Breadcrumb */
+    .breadcrumb{display:flex;align-items:center;gap:6px;list-style:none;font-size:.8rem;color:var(--muted);}
+    .breadcrumb-item a{color:var(--muted);text-decoration:none;}
+    .breadcrumb-item a:hover{color:var(--accent);}
+    .breadcrumb-item.active{color:var(--primary);font-weight:600;}
+    .breadcrumb-sep{color:var(--border-dark);}
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:var(--z-modal);display:flex;align-items:center;justify-content:center;padding:var(--space-md);}
+    .modal-content{background:#fff;border-radius:var(--radius-2xl);width:100%;max-width:520px;overflow:hidden;box-shadow:var(--shadow-xl);}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:var(--space-lg);border-bottom:1px solid var(--border);}
+    .modal-title{font-size:1.1rem;font-weight:700;}
+    .modal-close{background:none;border:none;font-size:1rem;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:var(--radius-sm);}
+    .modal-close:hover{color:var(--primary);background:var(--surface-alt);}
+    .modal-body{padding:var(--space-lg);}
+    .modal-footer{padding:var(--space-md) var(--space-lg);border-top:1px solid var(--border);display:flex;gap:var(--space-sm);justify-content:flex-end;}
+    /* Responsive */
+    @media(max-width:1024px){.hero-rail{grid-template-columns:1fr}.category-grid{grid-template-columns:repeat(2,1fr)}.benefits-grid{grid-template-columns:repeat(2,1fr)}.promo-banner{grid-template-columns:1fr}}
+    @media(max-width:768px){.hero{min-height:auto}.hero-layout{padding:56px 0 28px}.hero h1{letter-spacing:-.04em}.hero-stats{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}.hero-stats>div{padding:16px 14px}.category-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:480px){.hero-actions{flex-direction:column}.hero-stats{grid-template-columns:1fr}.hero-feature-card{width:100%}.promo-banner{padding:var(--space-lg)}.benefits-grid{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+
+
+<input type="checkbox" id="hamburger-toggle" class="hamburger-checkbox">
+<header class="site-header" id="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo" aria-label="SoleStep Home">
+        <span class="header-logo-emoji"><i class="fa-solid fa-shoe-prints"></i></span>
+        <span class="header-logo-text">Sole<span>Step</span></span>
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="index.html"    class="nav-link" id="nav-home">Home</a>
+        <a href="products.html" class="nav-link" id="nav-products">Shop</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="cart.html"     class="nav-link nav-link-cart" id="nav-cart">
+          <span class="cart-icon"><i class="fa-solid fa-cart-shopping"></i></span> Cart
+          <span class="badge cart-count-badge" style="display:none">0</span>
+        </a>
+      </nav>
+      <div class="header-actions">
+        <div id="header-user-chip" style="display:none;align-items:center;gap:6px;font-size:.85rem;font-weight:600;">
+          <i class="fa-solid fa-user"></i> <span class="user-name"></span>
+        </div>
+        <a href="register.html" id="header-register-btn" class="btn-auth btn-auth-primary">Sign up</a>
+        <a href="login.html"    id="header-login-btn"  class="btn-auth">Login</a>
+        <button                 id="header-logout-btn" class="btn-auth btn-logout" style="display:none">Logout</button>
+      </div>
+      <label for="hamburger-toggle" class="hamburger-label" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </label>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="index.html"    class="mobile-nav-link"><i class="fa-solid fa-house"></i> Home</a>
+  <a href="products.html" class="mobile-nav-link"><i class="fa-solid fa-shoe-prints"></i> Shop</a>
+  <a href="about.html" class="mobile-nav-link"><i class="fa-solid fa-circle-info"></i> About</a>
+  <a href="contact.html" class="mobile-nav-link"><i class="fa-solid fa-envelope"></i> Contact</a>
+  <a href="cart.html"     class="mobile-nav-link">
+    <i class="fa-solid fa-cart-shopping"></i> Cart <span class="badge cart-count-badge" style="display:none">0</span>
+  </a>
+  <div class="mobile-nav-divider"></div>
+  <div class="mobile-nav-actions">
+    <a href="register.html" id="mobile-register-btn" class="btn-primary">Sign up</a>
+    <a href="login.html"    id="mobile-login-btn"  class="btn-secondary">Login</a>
+    <button                 id="mobile-logout-btn" class="btn-secondary" style="display:none">Logout</button>
+  </div>
+</nav>
+
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-layout">
+        <div class="hero-content animate-fade-in">
+          <div class="hero-eyebrow">New 2026 Shoe Collection</div>
+          <h1>Move through Norway in <span>better shoes.</span></h1>
+          <p class="hero-sub">Performance sneakers, polished formals, and weather-ready boots curated for comfort, durability, and everyday Nordic routines.</p>
+          <div class="hero-actions">
+            <a href="products.html" class="btn-primary" id="hero-shop-btn">Shop Shoes</a>
+            <a href="products.html?category=Boots" class="btn-secondary" id="hero-running-btn">Weather Ready Boots</a>
+          </div>
+        </div>
+        <div class="hero-rail">
+          <div class="hero-stats">
+            <div><div class="hero-stat-num">500+</div><div class="hero-stat-label">Shoe Styles</div></div>
+            <div><div class="hero-stat-num">98%</div><div class="hero-stat-label">Happy Customers</div></div>
+            <div><div class="hero-stat-num">Free</div><div class="hero-stat-label">Shipping over $100</div></div>
+          </div>
+          <div class="hero-feature-card">
+            <div class="hero-feature-card-top">
+              <div>
+                <h2>Air Runner Pro</h2>
+                <p>Cushioned, light, and built for daily movement.</p>
+              </div>
+              <div class="hero-price">$89.99</div>
+            </div>
+            <a href="product.html?id=solestep-air-runner" class="hero-feature-link">View featured shoe <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Browse by Category</div>
+        <h2>Shop the Collection</h2>
+        <p>Explore footwear tailored for every occasion and lifestyle.</p>
+      </div>
+      <div class="category-grid">
+        <a href="products.html?category=Sneakers" class="category-card" id="cat-sneakers">
+          <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=600&q=80" alt="Sneakers" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80'">
+          <div class="category-overlay"></div>
+          <div class="category-info"><div class="category-name">👟 Sneakers</div></div>
+        </a>
+        <a href="products.html?category=Boots" class="category-card" id="cat-boots">
+          <img src="https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=600&q=80" alt="Boots" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=600&q=80'">
+          <div class="category-overlay"></div>
+          <div class="category-info"><div class="category-name">👢 Boots</div></div>
+        </a>
+        <a href="products.html?category=Formal" class="category-card" id="cat-formal">
+          <img src="https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600&q=80" alt="Formal shoes" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=600&q=80'">
+          <div class="category-overlay"></div>
+          <div class="category-info"><div class="category-name">👞 Formal</div></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Shoes -->
+  <section class="section" style="background:var(--surface-alt);">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Handpicked for You</div>
+        <h2>Featured Shoes</h2>
+        <p>The season's most-loved styles, curated by our experts.</p>
+      </div>
+      <div class="grid-4" id="featured-grid"></div>
+      <div style="text-align:center;margin-top:var(--space-lg);">
+        <a href="products.html" class="btn-secondary" id="view-all-btn">View Shop →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Promo Banner -->
+  <section class="section">
+    <div class="container">
+      <div class="promo-banner reveal">
+        <div>
+          <div class="section-tag">Limited Time</div>
+          <h2 class="promo-title">Up to <span>40% Off</span><br>Sale Styles</h2>
+          <p class="promo-desc">Upgrade your wardrobe without breaking the bank. Shop our end-of-season clearance before sizes run out.</p>
+          <a href="products.html?sort=sale" class="btn-primary" id="promo-shop-btn">Shop the Sale →</a>
+        </div>
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80" alt="Sale shoes" class="promo-img" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="section" style="background:var(--surface-alt);">
+    <div class="container">
+      <div class="benefits-grid">
+        <div class="benefit-card reveal">
+          <div class="benefit-icon"><i class="fa-solid fa-truck-fast"></i></div>
+          <h3 class="benefit-title">Free Shipping</h3>
+          <p class="benefit-desc">On all orders over $100. Express delivery available at checkout.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon"><i class="fa-solid fa-rotate-left"></i></div>
+          <h3 class="benefit-title">Easy Returns</h3>
+          <p class="benefit-desc">30-day hassle-free returns. No questions asked.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon"><i class="fa-solid fa-check-circle"></i></div>
+          <h3 class="benefit-title">Authentic Shoes</h3>
+          <p class="benefit-desc">Every shoe is 100% authentic and quality-checked before it ships to you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <span class="footer-logo-emoji"><i class="fa-solid fa-shoe-prints"></i></span>
+          <span class="footer-logo-text">Sole<span>Step</span></span>
+        </a>
+        <p class="footer-tagline">Premium footwear for Nordic routines. Curated for comfort, quality, and everyday style.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-link" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-link" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Shop</h4>
+        <nav class="footer-nav">
+          <a href="products.html" class="footer-nav-link">Shop</a>
+          <a href="products.html?category=Running" class="footer-nav-link">Running</a>
+          <a href="products.html?category=Casual" class="footer-nav-link">Casual</a>
+          <a href="products.html?category=Boots" class="footer-nav-link">Boots</a>
+          <a href="products.html?category=Formal" class="footer-nav-link">Formal</a>
+        </nav>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Account</h4>
+        <nav class="footer-nav">
+          <a href="login.html" class="footer-nav-link">Login</a>
+          <a href="register.html" class="footer-nav-link">Register</a>
+          <a href="cart.html" class="footer-nav-link">My Cart</a>
+          <a href="about.html" class="footer-nav-link">About</a>
+          <a href="contact.html" class="footer-nav-link">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-col-title">Newsletter</h4>
+        <p class="footer-newsletter-desc">Get deals, fit guidance, and new arrivals in your inbox.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault();UI.showToast('Subscribed!','success');this.reset();">
+          <div class="newsletter-input-row">
+            <input type="email" class="newsletter-input" placeholder="your@email.com" aria-label="Email for newsletter" required>
+            <button type="submit" class="newsletter-btn">Go</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">&copy; 2026 <span>SoleStep</span>. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="about.html" class="footer-bottom-link">About</a>
+        <a href="contact.html" class="footer-bottom-link">Contact</a>
+        <a href="#" class="footer-bottom-link">Privacy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  // Load featured products
+  async function loadFeatured() {
+    const grid = document.getElementById('featured-grid');
+    grid.innerHTML = UI.renderSkeletons(4);
+    try {
+      const products = await window.API.getAllProducts();
+      UI.renderProductGrid(grid, products.slice(0, 4));
+    } catch(e) {
+      grid.innerHTML = '<p style="color:var(--muted);text-align:center;grid-column:1/-1">Could not load shoes. Please try again.</p>';
+    }
+  }
+
+  window.handleNewsletter = function(e) {
+    e.preventDefault();
+    const email = document.getElementById('newsletter-email').value;
+    if (!email) return;
+    UI.showToast('Thanks for subscribing!', 'success');
+    document.getElementById('newsletter-email').value = '';
+  };
+
+  document.addEventListener('DOMContentLoaded', loadFeatured);
+</script>
+</body>
+</html>

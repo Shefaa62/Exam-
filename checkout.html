@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Checkout - SoleStep</title>
+  <meta name="description" content="Complete your SoleStep order securely."/>
+  <meta property="og:title" content="Checkout - SoleStep"/>
+  <meta property="og:description" content="Complete your SoleStep order securely."/>
+  <meta property="og:type" content="website"/>
+  <link rel="stylesheet" href="css/global.css"/>
+  <link rel="stylesheet" href="css/header.css"/>
+  <link rel="stylesheet" href="css/footer.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    .checkout-head{background:#fff;border-bottom:1px solid var(--border);padding:var(--space-lg) 0;}
+    .breadcrumb-lite{font-size:.8rem;color:var(--muted);margin-bottom:var(--space-sm);}
+    .breadcrumb-lite a{color:var(--muted);}
+    .checkout-title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-md);flex-wrap:wrap;}
+    .checkout-title-row h1{font-size:2rem;}
+    .secure-note{display:inline-flex;align-items:center;gap:8px;color:#059669;font-size:.86rem;font-weight:700;}
+    .ck-shell{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:var(--space-xl);align-items:start;padding:var(--space-xl) 0;}
+    .ck-form-stack{display:grid;gap:var(--space-md);}
+    .ck-panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-lg);box-shadow:var(--shadow-sm);}
+    .ck-panel-header{display:flex;align-items:center;justify-content:space-between;gap:var(--space-md);margin-bottom:var(--space-lg);padding-bottom:var(--space-sm);border-bottom:1px solid var(--border);}
+    .ck-panel-title{display:flex;align-items:center;gap:10px;font-size:1.05rem;font-weight:800;}
+    .ck-step{width:28px;height:28px;border-radius:999px;background:var(--primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);}
+    .form-grid-full{grid-column:1/-1;}
+    .option-grid{display:grid;gap:var(--space-sm);}
+    .option-card{display:flex;align-items:center;justify-content:space-between;gap:var(--space-md);border:1.5px solid var(--border-dark);border-radius:var(--radius-lg);padding:var(--space-md);cursor:pointer;transition:var(--transition-fast);background:#fff;}
+    .option-card:hover,.option-card:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 3px rgba(230,57,70,.08);}
+    .option-card input{accent-color:var(--accent);width:18px;height:18px;}
+    .option-left{display:flex;align-items:flex-start;gap:12px;}
+    .option-title{font-weight:800;color:var(--primary);}
+    .option-desc{font-size:.84rem;color:var(--muted);}
+    .option-price{font-weight:800;color:var(--primary);white-space:nowrap;}
+    .payment-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:var(--space-md);}
+    .check-row{display:flex;align-items:center;gap:10px;font-size:.9rem;color:var(--muted);margin-top:var(--space-sm);}
+    .check-row input{width:18px;height:18px;accent-color:var(--accent);}
+    .ck-summary{position:sticky;top:88px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-lg);box-shadow:var(--shadow-md);}
+    .summary-title{font-size:1.1rem;font-weight:900;margin-bottom:var(--space-md);}
+    .ck-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+    .ck-item-img-wrap{position:relative;flex-shrink:0;}
+    .ck-item-img{width:70px;height:70px;border-radius:var(--radius-md);object-fit:cover;background:var(--surface-alt);}
+    .qty-pill{position:absolute;top:-8px;right:-8px;min-width:22px;height:22px;border-radius:999px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;border:2px solid #fff;}
+    .ck-item-name{font-size:.9rem;font-weight:800;line-height:1.35;}
+    .ck-item-meta{font-size:.8rem;color:var(--muted);}
+    .ck-item-price{font-size:.9rem;font-weight:800;margin-left:auto;white-space:nowrap;}
+    .promo-box{display:flex;gap:8px;margin:var(--space-md) 0;}
+    .promo-box input{flex:1;padding:11px 12px;border:1.5px solid var(--border-dark);border-radius:var(--radius-md);font-size:.88rem;}
+    .promo-box button{padding:11px 14px;border-radius:var(--radius-md);background:var(--primary);color:#fff;font-size:.82rem;font-weight:800;}
+    .ck-row{display:flex;justify-content:space-between;gap:var(--space-md);font-size:.92rem;margin-bottom:10px;color:var(--muted);}
+    .ck-row strong{color:var(--primary);}
+    .ck-total{font-size:1.2rem;font-weight:900;margin-top:var(--space-md);padding-top:var(--space-md);border-top:2px solid var(--primary);color:var(--primary);}
+    .trust-list{display:grid;gap:8px;margin-top:var(--space-md);font-size:.84rem;color:var(--muted);}
+    .trust-list span{display:flex;align-items:center;gap:8px;}
+    .trust-list i{color:#059669;}
+    .success-wrap{text-align:center;padding:var(--space-2xl) var(--space-lg);max-width:680px;margin:0 auto;}
+    .success-checkmark{width:100px;height:100px;margin:0 auto var(--space-lg);}
+    .success-checkmark .check-icon{width:100px;height:100px;border-radius:50%;display:block;stroke-width:4;stroke:#10B981;stroke-miterlimit:10;fill:none;animation:scaleIn .4s ease;}
+    .success-checkmark .check-icon .check-circle{stroke-dasharray:314;stroke-dashoffset:314;animation:drawCircle .6s .2s forwards;}
+    .success-checkmark .check-icon .check-tick{stroke-dasharray:60;stroke-dashoffset:60;animation:drawTick .3s .6s forwards;}
+    @keyframes scaleIn{from{transform:scale(0)}to{transform:scale(1)}}
+    @keyframes drawCircle{to{stroke-dashoffset:0}}
+    @keyframes drawTick{to{stroke-dashoffset:0}}
+    .success-order{background:#fff;border:1px solid var(--border);padding:var(--space-lg);border-radius:var(--radius-xl);margin:var(--space-lg) 0;text-align:left;}
+    .success-row{display:flex;justify-content:space-between;gap:var(--space-md);padding:8px 0;border-bottom:1px solid var(--border);font-size:.92rem;}
+    .success-row:last-child{border-bottom:none;}
+    @media(max-width:980px){.ck-shell{grid-template-columns:1fr}.ck-summary{position:static;order:-1}.payment-row{grid-template-columns:1fr 1fr}.payment-row .form-group:first-child{grid-column:1/-1}}
+    @media(max-width:620px){.form-grid,.payment-row{grid-template-columns:1fr}.ck-panel,.ck-summary{padding:var(--space-md)}}
+  </style>
+</head>
+<body>
+<input type="checkbox" id="hamburger-toggle" class="hamburger-checkbox">
+<header class="site-header"><div class="container"><div class="header-inner">
+  <a href="index.html" class="header-logo" aria-label="SoleStep Home"><span class="header-logo-emoji"><i class="fa-solid fa-shoe-prints"></i></span><span class="header-logo-text">Sole<span>Step</span></span></a>
+  <nav class="header-nav" aria-label="Main navigation"><a href="index.html" class="nav-link">Home</a><a href="products.html" class="nav-link">Shop</a><a href="about.html" class="nav-link">About</a><a href="contact.html" class="nav-link">Contact</a><a href="cart.html" class="nav-link nav-link-cart active" aria-current="page" aria-label="Shopping cart"><span class="cart-icon"><i class="fa-solid fa-cart-shopping"></i></span> Cart<span class="badge cart-count-badge" style="display:none">0</span></a></nav>
+  <div class="header-actions"><div id="header-user-chip" style="display:none;align-items:center;gap:6px;font-size:.85rem;font-weight:600;"><i class="fa-solid fa-user"></i> <span class="user-name"></span></div><a href="register.html" id="header-register-btn" class="btn-auth btn-auth-primary">Sign up</a><a href="login.html" id="header-login-btn" class="btn-auth">Login</a><button id="header-logout-btn" class="btn-auth btn-logout" style="display:none">Logout</button></div>
+  <label for="hamburger-toggle" class="hamburger-label"><span></span><span></span><span></span></label>
+</div></div></header>
+<nav class="mobile-nav" aria-label="Mobile navigation"><a href="index.html" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Home</a><a href="products.html" class="mobile-nav-link"><i class="fa-solid fa-shoe-prints"></i> Shop</a><a href="about.html" class="mobile-nav-link"><i class="fa-solid fa-circle-info"></i> About</a><a href="contact.html" class="mobile-nav-link"><i class="fa-solid fa-envelope"></i> Contact</a><a href="cart.html" class="mobile-nav-link" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping"></i> Cart</a><div class="mobile-nav-divider"></div><div class="mobile-nav-actions"><a href="register.html" id="mobile-register-btn" class="btn-primary">Sign up</a><a href="login.html" id="mobile-login-btn" class="btn-secondary">Login</a><button id="mobile-logout-btn" class="btn-secondary" style="display:none">Logout</button></div></nav>
+
+<div class="checkout-head">
+  <div class="container">
+    <nav class="breadcrumb-lite"><a href="index.html">Home</a> / <a href="cart.html">Cart</a> / <span style="color:var(--primary);font-weight:700;">Checkout</span></nav>
+    <div class="checkout-title-row">
+      <div>
+        <h1>Checkout</h1>
+        <p>Complete your order with secure delivery across Norway.</p>
+      </div>
+      <span class="secure-note"><i class="fa-solid fa-lock"></i> Secure checkout</span>
+    </div>
+  </div>
+</div>
+
+<main><div class="container" id="checkout-content"></div></main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <span class="footer-logo-emoji"><i class="fa-solid fa-shoe-prints"></i></span>
+          <span class="footer-logo-text">Sole<span>Step</span></span>
+        </a>
+        <p class="footer-tagline">Premium footwear for Nordic routines. Curated for comfort, quality, and everyday style.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-link" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-link" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Shop</h4>
+        <nav class="footer-nav">
+          <a href="products.html" class="footer-nav-link">Shop</a>
+          <a href="products.html?category=Running" class="footer-nav-link">Running</a>
+          <a href="products.html?category=Casual" class="footer-nav-link">Casual</a>
+          <a href="products.html?category=Boots" class="footer-nav-link">Boots</a>
+          <a href="products.html?category=Formal" class="footer-nav-link">Formal</a>
+        </nav>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Account</h4>
+        <nav class="footer-nav">
+          <a href="login.html" class="footer-nav-link">Login</a>
+          <a href="register.html" class="footer-nav-link">Register</a>
+          <a href="cart.html" class="footer-nav-link">My Cart</a>
+          <a href="about.html" class="footer-nav-link">About</a>
+          <a href="contact.html" class="footer-nav-link">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-col-title">Newsletter</h4>
+        <p class="footer-newsletter-desc">Get deals, fit guidance, and new arrivals in your inbox.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault();UI.showToast('Subscribed!','success');this.reset();">
+          <div class="newsletter-input-row">
+            <input type="email" class="newsletter-input" placeholder="your@email.com" aria-label="Email for newsletter" required>
+            <button type="submit" class="newsletter-btn">Go</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">&copy; 2026 <span>SoleStep</span>. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="about.html" class="footer-bottom-link">About</a>
+        <a href="contact.html" class="footer-bottom-link">Contact</a>
+        <a href="#" class="footer-bottom-link">Privacy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/cart.js"></script><script src="js/auth.js"></script><script src="js/ui.js"></script>
+<script>
+let checkoutDiscount = 0;
+
+function renderCheckout() {
+  const container = document.getElementById('checkout-content');
+  const items = CART.getCart();
+
+  if (!items.length) {
+    window.location.href = 'cart.html';
+    return;
+  }
+
+  container.innerHTML = `
+    <form class="ck-shell" id="checkout-form" onsubmit="placeOrder(event)">
+      <div class="ck-form-stack">
+        <section class="ck-panel">
+          <div class="ck-panel-header"><h2 class="ck-panel-title"><span class="ck-step">1</span> Contact information</h2><span class="secure-note"><i class="fa-solid fa-shield-halved"></i> Encrypted</span></div>
+          <div class="form-grid">
+            <div class="form-group"><label class="form-label" for="first-name">First name</label><input class="form-input" id="first-name" name="firstName" type="text" autocomplete="given-name" required></div>
+            <div class="form-group"><label class="form-label" for="last-name">Last name</label><input class="form-input" id="last-name" name="lastName" type="text" autocomplete="family-name" required></div>
+            <div class="form-group"><label class="form-label" for="email">Email</label><input class="form-input" id="email" name="email" type="email" autocomplete="email" required></div>
+            <div class="form-group"><label class="form-label" for="phone">Phone</label><input class="form-input" id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+47" required></div>
+          </div>
+        </section>
+
+        <section class="ck-panel">
+          <div class="ck-panel-header"><h2 class="ck-panel-title"><span class="ck-step">2</span> Delivery address</h2></div>
+          <div class="form-grid">
+            <div class="form-group form-grid-full"><label class="form-label" for="address">Street address</label><input class="form-input" id="address" name="address" type="text" autocomplete="street-address" placeholder="Karl Johans gate 18" required></div>
+            <div class="form-group"><label class="form-label" for="postal">Postal code</label><input class="form-input" id="postal" name="postal" type="text" autocomplete="postal-code" placeholder="0159" required></div>
+            <div class="form-group"><label class="form-label" for="city">City</label><input class="form-input" id="city" name="city" type="text" autocomplete="address-level2" placeholder="Oslo" required></div>
+            <div class="form-group form-grid-full"><label class="form-label" for="country">Country</label><select class="form-input" id="country" name="country"><option>Norway</option></select></div>
+          </div>
+        </section>
+
+        <section class="ck-panel">
+          <div class="ck-panel-header"><h2 class="ck-panel-title"><span class="ck-step">3</span> Delivery method</h2></div>
+          <div class="option-grid">
+            <label class="option-card"><span class="option-left"><input type="radio" name="shipping" value="0" checked onchange="updateCheckoutTotals()"><span><span class="option-title">Standard delivery</span><span class="option-desc">2-4 business days with tracking</span></span></span><span class="option-price">Free</span></label>
+            <label class="option-card"><span class="option-left"><input type="radio" name="shipping" value="9.99" onchange="updateCheckoutTotals()"><span><span class="option-title">Express delivery</span><span class="option-desc">1-2 business days in major cities</span></span></span><span class="option-price">$9.99</span></label>
+          </div>
+        </section>
+
+        <section class="ck-panel">
+          <div class="ck-panel-header"><h2 class="ck-panel-title"><span class="ck-step">4</span> Payment</h2><span class="secure-note"><i class="fa-solid fa-credit-card"></i> Card payment</span></div>
+          <div class="payment-row">
+            <div class="form-group"><label class="form-label" for="card-number">Card number</label><input class="form-input" id="card-number" inputmode="numeric" placeholder="4242 4242 4242 4242" required></div>
+            <div class="form-group"><label class="form-label" for="expiry">Expiry</label><input class="form-input" id="expiry" placeholder="MM/YY" required></div>
+            <div class="form-group"><label class="form-label" for="cvc">CVC</label><input class="form-input" id="cvc" inputmode="numeric" placeholder="123" required></div>
+          </div>
+          <label class="check-row"><input type="checkbox" checked> Billing address is the same as delivery address</label>
+        </section>
+      </div>
+
+      <aside class="ck-summary" aria-label="Order summary">
+        ${renderSummaryMarkup(items)}
+      </aside>
+    </form>
+  `;
+  updateCheckoutTotals();
+}
+
+function renderSummaryMarkup(items) {
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  return `
+    <h2 class="summary-title">Order summary</h2>
+    <div style="font-size:.86rem;color:var(--muted);margin-bottom:var(--space-sm);">${itemCount} item${itemCount !== 1 ? 's' : ''}</div>
+    ${items.map(item => `
+      <div class="ck-item">
+        <div class="ck-item-img-wrap"><img src="${item.image}" class="ck-item-img" alt="${item.name}"><span class="qty-pill">${item.quantity}</span></div>
+        <div style="flex:1;"><div class="ck-item-name">${item.name}</div><div class="ck-item-meta">${item.brand || 'SoleStep'}</div></div>
+        <div class="ck-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+      </div>
+    `).join('')}
+    <div class="promo-box"><input type="text" id="checkout-coupon" placeholder="Gift card or discount code"><button type="button" onclick="applyCheckoutCoupon()">Apply</button></div>
+    <div id="checkout-coupon-msg"></div>
+    <div class="ck-row"><span>Subtotal</span><strong id="summary-subtotal">$0.00</strong></div>
+    <div class="ck-row" id="summary-discount-row" style="display:none;"><span>Discount</span><strong id="summary-discount" style="color:#059669;">-$0.00</strong></div>
+    <div class="ck-row"><span>Delivery</span><strong id="summary-shipping">Free</strong></div>
+    <div class="ck-row"><span>Estimated tax</span><strong id="summary-tax">$0.00</strong></div>
+    <div class="ck-row ck-total"><span>Total</span><strong id="summary-total">$0.00</strong></div>
+    <button class="btn-primary" id="place-order-btn" type="submit" style="width:100%;margin-top:var(--space-md);"><i class="fa-solid fa-lock"></i> Pay Securely</button>
+    <div class="trust-list"><span><i class="fa-solid fa-circle-check"></i> 30-day returns</span><span><i class="fa-solid fa-circle-check"></i> Tracked delivery</span><span><i class="fa-solid fa-circle-check"></i> Secure card handling</span></div>
+  `;
+}
+
+function getCheckoutNumbers() {
+  const items = CART.getCart();
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const selectedShipping = document.querySelector('input[name="shipping"]:checked');
+  const shipping = selectedShipping ? Number(selectedShipping.value) : 0;
+  const tax = subtotal * 0.085;
+  const discount = Math.min(checkoutDiscount, subtotal);
+  return { subtotal, shipping, tax, discount, total: subtotal + shipping + tax - discount };
+}
+
+function updateCheckoutTotals() {
+  const numbers = getCheckoutNumbers();
+  document.getElementById('summary-subtotal').textContent = CART.formatPrice(numbers.subtotal);
+  document.getElementById('summary-discount-row').style.display = numbers.discount > 0 ? 'flex' : 'none';
+  document.getElementById('summary-discount').textContent = '-' + CART.formatPrice(numbers.discount);
+  document.getElementById('summary-shipping').textContent = numbers.shipping === 0 ? 'Free' : CART.formatPrice(numbers.shipping);
+  document.getElementById('summary-tax').textContent = CART.formatPrice(numbers.tax);
+  document.getElementById('summary-total').textContent = CART.formatPrice(numbers.total);
+}
+
+function applyCheckoutCoupon() {
+  const input = document.getElementById('checkout-coupon');
+  const msg = document.getElementById('checkout-coupon-msg');
+  if (!input.value.trim()) {
+    msg.innerHTML = '<p style="font-size:.82rem;color:var(--accent);margin-bottom:8px;">Enter a discount code.</p>';
+    return;
+  }
+  try {
+    const result = CART.applyCoupon(input.value);
+    checkoutDiscount = result.discount;
+    msg.innerHTML = `<p style="font-size:.82rem;color:#059669;margin-bottom:8px;">${result.label} applied.</p>`;
+    updateCheckoutTotals();
+  } catch (err) {
+    checkoutDiscount = 0;
+    updateCheckoutTotals();
+    msg.innerHTML = `<p style="font-size:.82rem;color:var(--accent);margin-bottom:8px;">${err.message}</p>`;
+  }
+}
+
+function placeOrder(event) {
+  event.preventDefault();
+  const form = document.getElementById('checkout-form');
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const btn = document.getElementById('place-order-btn');
+  UI.setButtonLoading(btn, true, 'Processing...');
+
+  const numbers = getCheckoutNumbers();
+  const city = document.getElementById('city').value.trim();
+
+  setTimeout(() => {
+    const orderNumber = 'SS-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+    CART.clearCart();
+
+    document.getElementById('checkout-content').innerHTML = `
+      <div class="success-wrap animate-fade-in">
+        <div class="success-checkmark"><svg class="check-icon" viewBox="0 0 100 100"><circle class="check-circle" cx="50" cy="50" r="45" /><polyline class="check-tick" points="30,52 45,67 70,35" /></svg></div>
+        <h1 style="font-size:2rem;margin-bottom:var(--space-sm);">Order confirmed</h1>
+        <p style="color:var(--muted);font-size:1.05rem;">Thank you for shopping with SoleStep. A confirmation email is on its way.</p>
+        <div class="success-order">
+          <div class="success-row"><span>Order number</span><strong>${orderNumber}</strong></div>
+          <div class="success-row"><span>Delivery area</span><strong>${city || 'Norway'}</strong></div>
+          <div class="success-row"><span>Estimated delivery</span><strong>2-4 business days</strong></div>
+          <div class="success-row"><span>Total paid</span><strong>${CART.formatPrice(numbers.total)}</strong></div>
+        </div>
+        <a href="products.html" class="btn-primary">Continue Shopping</a>
+      </div>
+    `;
+  }, 1200);
+}
+
+document.addEventListener('DOMContentLoaded', renderCheckout);
+</script>
+</body>
+</html>

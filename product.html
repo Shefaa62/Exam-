@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Product Details — SoleStep</title>
+  <meta name="description" content="View product details, reviews, and add to your cart."/>
+  <meta property="og:title" content="Product Details — SoleStep"/>
+  <meta property="og:description" content="View premium footwear details, customer reviews, and add to your cart."/>
+  <meta property="og:type" content="website"/>
+  <link rel="stylesheet" href="css/global.css"/>
+  <link rel="stylesheet" href="css/header.css"/>
+  <link rel="stylesheet" href="css/footer.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    .pd-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:80px;padding:var(--space-xl) 0 var(--space-2xl);}
+    .pd-gallery{position:sticky;top:88px;height:fit-content;}
+    .pd-image-stage{position:relative;background:#111;border-radius:24px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-lg);}
+    .pd-main-img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--surface-alt);}
+    .pd-image-stage::after{content:'';position:absolute;inset:auto 0 0;height:38%;background:linear-gradient(to top,rgba(0,0,0,.42),transparent);pointer-events:none;}
+    .pd-gallery-badge{position:absolute;left:18px;bottom:18px;z-index:1;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);padding:10px 12px;border-radius:999px;font-size:.82rem;font-weight:800;color:var(--primary);}
+    .pd-info{display:flex;flex-direction:column;gap:var(--space-lg);}
+    .pd-buy-card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:var(--space-lg);box-shadow:var(--shadow-md);display:flex;flex-direction:column;gap:var(--space-md);}
+    .pd-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;}
+    .pd-badge-sale{background:var(--accent);color:#fff;}
+    .pd-kicker-row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-md);flex-wrap:wrap;}
+    .pd-brand{font-size:.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;}
+    .pd-stock{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:800;color:#059669;background:rgba(16,185,129,.1);padding:6px 10px;border-radius:999px;}
+    .pd-name{font-size:clamp(2rem,4vw,3.2rem);font-weight:900;line-height:1.02;letter-spacing:-.04em;}
+    .pd-rating{display:flex;align-items:center;gap:8px;}
+    .pd-rating .stars{display:flex;gap:1px;}
+    .pd-rating .star{font-size:1rem;color:#F59E0B;}
+    .pd-rating .star-empty{color:#D1D5DB;}
+    .pd-rating-text{font-size:.85rem;color:var(--muted);}
+    .pd-price-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+    .pd-price{font-size:2rem;font-weight:900;color:var(--primary);}
+    .pd-orig{font-size:1.1rem;color:var(--muted);text-decoration:line-through;}
+    .pd-discount{font-size:.85rem;font-weight:700;color:var(--accent);background:rgba(230,57,70,.1);padding:4px 10px;border-radius:999px;}
+    .pd-save{font-size:.9rem;font-weight:700;color:var(--accent);}
+    .pd-desc{color:var(--muted);line-height:1.85;font-size:.98rem;}
+    .pd-control-row{display:grid;grid-template-columns:1fr 140px;gap:var(--space-md);margin-top:var(--space-md);}
+    .pd-select-label{display:block;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;color:var(--primary);}
+    .pd-size-select{width:100%;padding:13px 14px;border:1.5px solid var(--border-dark);border-radius:var(--radius-md);background:#fff;color:var(--primary);}
+    .pd-qty{display:flex;border:1.5px solid var(--border-dark);border-radius:var(--radius-md);overflow:hidden;height:48px;}
+    .pd-qty button{width:42px;font-weight:900;color:var(--primary);}
+    .pd-qty input{width:100%;text-align:center;font-weight:800;color:var(--primary);}
+    .pd-actions{display:flex;gap:var(--space-md);margin-top:var(--space-md);}
+    .pd-add-btn{flex:1;}
+    .pd-secondary-action{width:54px;min-width:54px;padding:0;border-radius:var(--radius-md);}
+    .pd-mini-note{font-size:.82rem;color:var(--muted);display:flex;align-items:flex-start;gap:8px;margin-top:2px;}
+    .pd-chips{display:flex;gap:8px;flex-wrap:wrap;}
+    .pd-chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface-alt);border:1px solid var(--border);border-radius:999px;padding:6px 10px;font-size:.8rem;font-weight:700;color:var(--primary);}
+    .pd-features{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-lg);padding:var(--space-lg);background:var(--surface-alt);border-radius:var(--radius-xl);margin-top:var(--space-sm);}
+    .pd-feat{display:flex;align-items:flex-start;gap:10px;font-size:.85rem;}
+    .pd-feat strong{display:block;color:var(--primary);line-height:1.3;}
+    .pd-feat span:last-child{color:var(--muted);font-size:.78rem;}
+    .pd-feat-icon{font-size:1.1rem;color:var(--accent);width:20px;text-align:center;flex-shrink:0;}
+    .pd-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-lg);margin-top:var(--space-md);}
+    .pd-detail-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-lg);}
+    .pd-detail-card h3{font-size:.9rem;margin-bottom:6px;}
+    .pd-detail-card p{font-size:.84rem;}
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);list-style:none;padding:var(--space-md) 0;}
+    .breadcrumb a{color:var(--muted);text-decoration:none;}
+    .breadcrumb a:hover{color:var(--accent);}
+    /* Reviews */
+    .reviews-section{margin-top:var(--space-2xl);padding-top:var(--space-xl);border-top:1px solid var(--border);}
+    .reviews-head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-md);flex-wrap:wrap;margin-bottom:var(--space-lg);}
+    .reviews-title{font-size:1.5rem;font-weight:800;margin-bottom:var(--space-lg);}
+    .reviews-head .reviews-title{margin-bottom:0;}
+    .review-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-lg);margin-bottom:var(--space-md);}
+    .review-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-sm);}
+    .review-author{font-weight:700;font-size:.95rem;}
+    .review-stars{display:flex;gap:1px;}
+    .review-stars .star{font-size:.85rem;color:#F59E0B;}
+    .review-stars .star-empty{color:#D1D5DB;}
+    .review-text{color:var(--muted);font-size:.9rem;line-height:1.7;}
+    .no-reviews{color:var(--muted);font-style:italic;}
+    .related-section{padding:var(--space-xl) 0;border-top:1px solid var(--border);}
+    .related-head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--space-md);flex-wrap:wrap;margin-bottom:var(--space-lg);}
+    .related-head h2{font-size:1.7rem;}
+    .related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-md);}
+    .related-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;text-decoration:none;transition:var(--transition-base);}
+    .related-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+    .related-card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--surface-alt);}
+    .related-card-body{padding:var(--space-md);}
+    .related-card h3{font-size:.96rem;margin-bottom:6px;}
+    .related-price{font-weight:900;color:var(--primary);}
+    .size-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:var(--z-modal);display:flex;align-items:center;justify-content:center;padding:var(--space-md);}
+    .size-modal{background:#fff;border-radius:24px;box-shadow:var(--shadow-xl);width:min(620px,100%);overflow:hidden;}
+    .size-modal-header{display:flex;align-items:center;justify-content:space-between;gap:var(--space-md);padding:var(--space-lg);border-bottom:1px solid var(--border);}
+    .size-modal-header h2{font-size:1.25rem;}
+    .size-modal-close{width:40px;height:40px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--primary);}
+    .size-modal-close:hover{background:var(--surface-alt);}
+    .size-modal-body{padding:var(--space-lg);}
+    .size-chart{width:100%;border-collapse:collapse;margin:var(--space-md) 0;}
+    .size-chart th,.size-chart td{padding:12px 10px;border-bottom:1px solid var(--border);text-align:left;font-size:.9rem;}
+    .size-chart th{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+    .size-help-note{background:var(--surface-alt);border-radius:var(--radius-lg);padding:var(--space-md);font-size:.9rem;color:var(--muted);}
+    /* Skeleton */
+    .skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-md);}
+    @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+    .skeleton-img{width:100%;aspect-ratio:1;border-radius:var(--radius-2xl);}
+    .skeleton-text{height:14px;margin-bottom:8px;border-radius:4px;}
+    .skeleton-text-lg{height:28px;width:60%;margin-bottom:12px;}
+    .skeleton-text-price{height:32px;width:40%;margin-bottom:12px;}
+    .skeleton-text-sm{width:50%;}
+    @media(max-width:900px){.pd-layout{grid-template-columns:1fr;gap:var(--space-xl);}.pd-gallery{position:static;}.pd-detail-grid,.related-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:620px){.pd-name{font-size:2rem;}.pd-price{font-size:1.5rem;}.pd-features,.pd-control-row,.pd-detail-grid,.related-grid{grid-template-columns:1fr;}.pd-actions{flex-direction:row;}.pd-buy-card{padding:var(--space-md);}}
+  </style>
+</head>
+<body>
+<input type="checkbox" id="hamburger-toggle" class="hamburger-checkbox">
+<header class="site-header"><div class="container"><div class="header-inner">
+  <a href="index.html" class="header-logo" aria-label="SoleStep Home"><span class="header-logo-emoji"><i class="fa-solid fa-shoe-prints"></i></span><span class="header-logo-text">Sole<span>Step</span></span></a>
+  <nav class="header-nav" aria-label="Main navigation">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="products.html" class="nav-link">Shop</a><a href="about.html" class="nav-link">About</a><a href="contact.html" class="nav-link">Contact</a>
+    <a href="cart.html" class="nav-link nav-link-cart" aria-label="Shopping cart"><span class="cart-icon"><i class="fa-solid fa-cart-shopping"></i></span> Cart<span class="badge cart-count-badge" style="display:none">0</span></a>
+  </nav>
+  <div class="header-actions">
+    <div id="header-user-chip" style="display:none;align-items:center;gap:6px;font-size:.85rem;font-weight:600;"><i class="fa-solid fa-user"></i> <span class="user-name"></span></div>
+    <a href="register.html" id="header-register-btn" class="btn-auth btn-auth-primary">Sign up</a>
+    <a href="login.html" id="header-login-btn" class="btn-auth">Login</a>
+    <button id="header-logout-btn" class="btn-auth btn-logout" style="display:none">Logout</button>
+  </div>
+  <label for="hamburger-toggle" class="hamburger-label"><span></span><span></span><span></span></label>
+</div></div></header>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="index.html" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Home</a>
+  <a href="products.html" class="mobile-nav-link"><i class="fa-solid fa-shoe-prints"></i> Shop</a><a href="about.html" class="mobile-nav-link"><i class="fa-solid fa-circle-info"></i> About</a><a href="contact.html" class="mobile-nav-link"><i class="fa-solid fa-envelope"></i> Contact</a>
+  <a href="cart.html" class="mobile-nav-link" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping"></i> Cart <span class="badge cart-count-badge" style="display:none">0</span></a>
+  <div class="mobile-nav-divider"></div>
+  <div class="mobile-nav-actions"><a href="register.html" id="mobile-register-btn" class="btn-primary">Sign up</a><a href="login.html" id="mobile-login-btn" class="btn-secondary">Login</a><button id="mobile-logout-btn" class="btn-secondary" style="display:none">Logout</button></div>
+</nav>
+
+<main>
+  <div class="container">
+    <ol class="breadcrumb" id="pd-breadcrumb">
+      <li><a href="index.html">Home</a></li><li style="color:var(--border-dark)">›</li>
+      <li><a href="products.html">Shop</a></li><li style="color:var(--border-dark)">›</li>
+      <li style="color:var(--primary);font-weight:600" id="bc-name">Loading…</li>
+    </ol>
+    <div class="pd-layout" id="pd-content">
+      <div class="pd-gallery"><div class="skeleton skeleton-img"></div></div>
+      <div class="pd-info">
+        <div class="skeleton skeleton-text skeleton-text-sm"></div>
+        <div class="skeleton skeleton-text-lg"></div>
+        <div class="skeleton skeleton-text skeleton-text-sm"></div>
+        <div class="skeleton skeleton-text-price"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text"></div>
+      </div>
+    </div>
+    <div class="reviews-section" id="reviews-section" style="display:none;">
+      <div class="reviews-head">
+        <div>
+          <p class="pd-brand">Reviews</p>
+          <h2 class="reviews-title">Customer Reviews</h2>
+        </div>
+        <a href="contact.html" class="btn-secondary">Ask about fit</a>
+      </div>
+      <div id="reviews-list"></div>
+    </div>
+    <section class="related-section" id="related-section" style="display:none;">
+      <div class="related-head">
+        <div>
+          <p class="pd-brand">Selected for you</p>
+          <h2>Complete your shoe rotation</h2>
+        </div>
+        <a href="products.html" class="btn-secondary">View Shop</a>
+      </div>
+      <div class="related-grid" id="related-grid"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <span class="footer-logo-emoji"><i class="fa-solid fa-shoe-prints"></i></span>
+          <span class="footer-logo-text">Sole<span>Step</span></span>
+        </a>
+        <p class="footer-tagline">Premium footwear for Nordic routines. Curated for comfort, quality, and everyday style.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-link" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-link" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Shop</h4>
+        <nav class="footer-nav">
+          <a href="products.html" class="footer-nav-link">Shop</a>
+          <a href="products.html?category=Running" class="footer-nav-link">Running</a>
+          <a href="products.html?category=Casual" class="footer-nav-link">Casual</a>
+          <a href="products.html?category=Boots" class="footer-nav-link">Boots</a>
+          <a href="products.html?category=Formal" class="footer-nav-link">Formal</a>
+        </nav>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Account</h4>
+        <nav class="footer-nav">
+          <a href="login.html" class="footer-nav-link">Login</a>
+          <a href="register.html" class="footer-nav-link">Register</a>
+          <a href="cart.html" class="footer-nav-link">My Cart</a>
+          <a href="about.html" class="footer-nav-link">About</a>
+          <a href="contact.html" class="footer-nav-link">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-newsletter">
+        <h4 class="footer-col-title">Newsletter</h4>
+        <p class="footer-newsletter-desc">Get deals, fit guidance, and new arrivals in your inbox.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault();UI.showToast('Subscribed!','success');this.reset();">
+          <div class="newsletter-input-row">
+            <input type="email" class="newsletter-input" placeholder="your@email.com" aria-label="Email for newsletter" required>
+            <button type="submit" class="newsletter-btn">Go</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">&copy; 2026 <span>SoleStep</span>. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="about.html" class="footer-bottom-link">About</a>
+        <a href="contact.html" class="footer-bottom-link">Contact</a>
+        <a href="#" class="footer-bottom-link">Privacy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script><script src="js/cart.js"></script><script src="js/auth.js"></script><script src="js/ui.js"></script>
+<script>
+let product = null;
+
+function renderStars(rating) {
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5;
+  const empty = 5 - full - (half ? 1 : 0);
+  let html = '';
+  for (let i = 0; i < full; i++) html += '<span class="star">★</span>';
+  if (half) html += '<span class="star" style="opacity:.5">★</span>';
+  for (let i = 0; i < empty; i++) html += '<span class="star star-empty">★</span>';
+  return html;
+}
+
+function renderReviewStars(rating) {
+  const full = Math.floor(rating);
+  const empty = 5 - full;
+  let html = '';
+  for (let i = 0; i < full; i++) html += '<span class="star">★</span>';
+  for (let i = 0; i < empty; i++) html += '<span class="star star-empty">★</span>';
+  return html;
+}
+
+function getProductDetails(product) {
+  const tags = product.tags || [];
+  const category = tags[1] || 'Everyday';
+  const tagText = tags.slice(1).join(', ') || 'Premium footwear';
+  const details = {
+    material: category === 'Formal' || tags.includes('Leather') || tags.includes('Boots') ? 'Leather upper' : 'Breathable textile upper',
+    sole: tags.includes('Outdoor') || tags.includes('Hiking') ? 'Textured outdoor grip' : 'Cushioned rubber sole',
+    use: tagText,
+  };
+  return details;
+}
+
+function renderRelatedCard(item) {
+  const price = item.discountedPrice && item.discountedPrice < item.price ? item.discountedPrice : item.price;
+  return `
+    <a class="related-card" href="product.html?id=${item.id}">
+      <img src="${item.image?.url || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80'}" alt="${item.image?.alt || item.title}">
+      <div class="related-card-body">
+        <h3>${item.title}</h3>
+        <p style="font-size:.82rem;margin-bottom:8px;">${item.tags?.slice(1).join(' / ') || 'SoleStep'}</p>
+        <div class="related-price">$${price.toFixed(2)}</div>
+      </div>
+    </a>
+  `;
+}
+
+function openSizeChartModal() {
+  const existing = document.getElementById('size-chart-modal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'size-chart-modal';
+  modal.className = 'size-modal-backdrop';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'Shoe size chart');
+  modal.innerHTML = `
+    <div class="size-modal">
+      <div class="size-modal-header">
+        <div>
+          <p class="pd-brand">Fit guide</p>
+          <h2>Shoe size chart</h2>
+        </div>
+        <button class="size-modal-close" type="button" aria-label="Close size chart"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="size-modal-body">
+        <p>Use the chart as a starting point. If you are between sizes, choose the larger size for boots and running shoes.</p>
+        <table class="size-chart">
+          <thead><tr><th>EU</th><th>UK</th><th>US Men</th><th>Foot length</th></tr></thead>
+          <tbody>
+            <tr><td>40</td><td>6.5</td><td>7.5</td><td>25.4 cm</td></tr>
+            <tr><td>41</td><td>7</td><td>8</td><td>26.0 cm</td></tr>
+            <tr><td>42</td><td>8</td><td>9</td><td>26.7 cm</td></tr>
+            <tr><td>43</td><td>9</td><td>10</td><td>27.3 cm</td></tr>
+            <tr><td>44</td><td>9.5</td><td>10.5</td><td>27.9 cm</td></tr>
+            <tr><td>45</td><td>10.5</td><td>11.5</td><td>28.6 cm</td></tr>
+          </tbody>
+        </table>
+        <div class="size-help-note"><strong>Need help?</strong> Contact our Oslo team with your usual size, foot length, and how you plan to use the shoes.</div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  document.body.style.overflow = 'hidden';
+
+  const close = () => {
+    modal.remove();
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKeyDown);
+  };
+  const onKeyDown = event => {
+    if (event.key === 'Escape') close();
+  };
+
+  modal.querySelector('.size-modal-close').addEventListener('click', close);
+  modal.addEventListener('click', event => {
+    if (event.target === modal) close();
+  });
+  document.addEventListener('keydown', onKeyDown);
+}
+
+async function renderRelatedProducts(currentProduct) {
+  const section = document.getElementById('related-section');
+  const grid = document.getElementById('related-grid');
+  if (!section || !grid) return;
+
+  try {
+    const products = await API.getAllProducts();
+    const currentTags = currentProduct.tags || [];
+    const related = products
+      .filter(item => item.id !== currentProduct.id)
+      .sort((a, b) => {
+        const aScore = (a.tags || []).filter(tag => currentTags.includes(tag)).length;
+        const bScore = (b.tags || []).filter(tag => currentTags.includes(tag)).length;
+        return bScore - aScore;
+      })
+      .slice(0, 3);
+
+    if (!related.length) return;
+    grid.innerHTML = related.map(renderRelatedCard).join('');
+    section.style.display = 'block';
+  } catch {
+    section.style.display = 'none';
+  }
+}
+
+async function loadProduct() {
+  const id = new URLSearchParams(window.location.search).get('id');
+  if (!id) { window.location.href = 'products.html'; return; }
+
+  const content = document.getElementById('pd-content');
+
+  try {
+    product = await window.API.getProductById(id);
+    if (!product) throw new Error('Product not found');
+
+    document.title = product.title + ' — SoleStep';
+    document.getElementById('bc-name').textContent = product.title;
+
+    const isDiscounted = product.discountedPrice && product.discountedPrice < product.price;
+    const currentPrice = isDiscounted ? product.discountedPrice : product.price;
+    const savings = isDiscounted ? (product.price - product.discountedPrice) : 0;
+    const discountPercent = isDiscounted ? Math.round((savings / product.price) * 100) : 0;
+
+    const imageUrl = product.image?.url || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80';
+    const imageAlt = product.image?.alt || product.title;
+    const brand = product.tags?.[0] || 'SoleStep';
+    const category = product.tags?.[1] || 'Premium shoes';
+    const details = getProductDetails(product);
+    const stars = renderStars(product.rating || 0);
+    const reviewCount = product.reviews?.length || 0;
+
+    const badgeHtml = isDiscounted ? '<span class="pd-badge pd-badge-sale">SALE</span>' : '';
+    const saveHtml = isDiscounted ? `<p class="pd-save">You save $${savings.toFixed(2)}</p>` : '';
+
+    content.innerHTML = `
+      <div class="pd-gallery">
+        <div class="pd-image-stage">
+          <img src="${imageUrl}" alt="${imageAlt}" class="pd-main-img"
+               onerror="this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80'">
+          <div class="pd-gallery-badge"><i class="fa-solid fa-shield-heart"></i> SoleStep quality checked</div>
+        </div>
+      </div>
+      <div class="pd-info">
+        <div class="pd-buy-card">
+          <div class="pd-kicker-row">
+            <div>
+              ${badgeHtml}
+              <div class="pd-brand">${brand}</div>
+            </div>
+            <span class="pd-stock"><i class="fa-solid fa-circle-check"></i> In stock</span>
+          </div>
+          <h1 class="pd-name">${product.title}</h1>
+          <div class="pd-rating">
+            <div class="stars">${stars}</div>
+            <span class="pd-rating-text">${product.rating || 0} (${reviewCount} review${reviewCount !== 1 ? 's' : ''})</span>
+          </div>
+          <div class="pd-price-row">
+            <span class="pd-price">$${currentPrice.toFixed(2)}</span>
+            ${isDiscounted ? `<span class="pd-orig">$${product.price.toFixed(2)}</span><span class="pd-discount">-${discountPercent}% OFF</span>` : ''}
+          </div>
+          ${saveHtml}
+          <p class="pd-desc">${product.description || 'No description available.'}</p>
+          <div class="pd-chips">
+            <span class="pd-chip"><i class="fa-solid fa-shoe-prints"></i> ${category}</span>
+            <span class="pd-chip"><i class="fa-solid fa-cloud-rain"></i> Nordic ready</span>
+            <span class="pd-chip"><i class="fa-solid fa-truck-fast"></i> Norway delivery</span>
+          </div>
+          <div class="pd-control-row">
+            <div>
+              <label class="pd-select-label" for="pd-size-select">Size</label>
+              <select class="pd-size-select" id="pd-size-select" aria-label="Choose shoe size">
+                <option value="40">EU 40</option>
+                <option value="41">EU 41</option>
+                <option value="42" selected>EU 42</option>
+                <option value="43">EU 43</option>
+                <option value="44">EU 44</option>
+                <option value="45">EU 45</option>
+              </select>
+            </div>
+            <div>
+              <span class="pd-select-label">Quantity</span>
+              <div class="pd-qty">
+                <button type="button" id="qty-minus" aria-label="Decrease quantity">-</button>
+                <input id="pd-qty-input" type="number" value="1" min="1" max="10" aria-label="Quantity">
+                <button type="button" id="qty-plus" aria-label="Increase quantity">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="pd-actions">
+            <button class="btn-primary pd-add-btn" id="add-to-cart-btn">
+              <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+            </button>
+            <button class="btn-secondary pd-secondary-action" type="button" id="fit-help-btn" aria-label="Open size chart">
+              <i class="fa-solid fa-ruler"></i>
+            </button>
+          </div>
+          <p class="pd-mini-note"><i class="fa-solid fa-lock"></i> Secure checkout. Cards are handled through an encrypted payment flow.</p>
+        </div>
+        <div class="pd-features">
+          <div class="pd-feat"><span class="pd-feat-icon"><i class="fa-solid fa-truck-fast"></i></span><span><strong>Fast Norway delivery</strong><span>Tracked delivery from 2-4 business days.</span></span></div>
+          <div class="pd-feat"><span class="pd-feat-icon"><i class="fa-solid fa-rotate-left"></i></span><span><strong>30-day returns</strong><span>Try them indoors and return if the fit is wrong.</span></span></div>
+          <div class="pd-feat"><span class="pd-feat-icon"><i class="fa-solid fa-lock"></i></span><span><strong>Secure checkout</strong><span>Protected payment and order confirmation.</span></span></div>
+          <div class="pd-feat"><span class="pd-feat-icon"><i class="fa-solid fa-star"></i></span><span><strong>Quality checked</strong><span>Reviewed for comfort, finish, and everyday use.</span></span></div>
+        </div>
+        <div class="pd-detail-grid">
+          <div class="pd-detail-card"><h3>Material</h3><p>${details.material}</p></div>
+          <div class="pd-detail-card"><h3>Sole</h3><p>${details.sole}</p></div>
+          <div class="pd-detail-card"><h3>Best for</h3><p>${details.use}</p></div>
+        </div>
+      </div>
+    `;
+
+    // Add to cart handler
+    document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+      const quantity = Math.min(10, Math.max(1, parseInt(document.getElementById('pd-qty-input').value, 10) || 1));
+      const size = document.getElementById('pd-size-select').value;
+      window.CART.addItem(product, quantity, size, null);
+      window.UI.showToast(`${product.title} added to cart.`, 'success', 2000);
+    });
+
+    document.getElementById('qty-minus').addEventListener('click', () => {
+      const input = document.getElementById('pd-qty-input');
+      input.value = Math.max(1, (parseInt(input.value, 10) || 1) - 1);
+    });
+
+    document.getElementById('qty-plus').addEventListener('click', () => {
+      const input = document.getElementById('pd-qty-input');
+      input.value = Math.min(10, (parseInt(input.value, 10) || 1) + 1);
+    });
+
+    document.getElementById('fit-help-btn').addEventListener('click', () => {
+      openSizeChartModal();
+    });
+
+    // Reviews
+    renderReviews(product.reviews || []);
+    renderRelatedProducts(product);
+
+  } catch (e) {
+    content.innerHTML = `
+      <div style="text-align:center;padding:80px;grid-column:1/-1">
+        <h2>Could not load product</h2>
+        <p style="color:var(--muted);margin:12px 0 24px">${e.message || 'Please try again.'}</p>
+        <a href="products.html" class="btn-primary">Browse Shoes</a>
+      </div>
+    `;
+  }
+}
+
+function renderReviews(reviews) {
+  const section = document.getElementById('reviews-section');
+  const list = document.getElementById('reviews-list');
+
+  if (!reviews || reviews.length === 0) {
+    section.style.display = 'block';
+    list.innerHTML = '<p class="no-reviews">No reviews yet.</p>';
+    return;
+  }
+
+  section.style.display = 'block';
+  list.innerHTML = reviews.map(review => {
+    const username = review.username || 'Anonymous';
+    const rating = review.rating || 0;
+    const description = review.description || 'No comment.';
+    const stars = renderReviewStars(rating);
+    return `
+      <div class="review-card">
+        <div class="review-header">
+          <span class="review-author">${username}</span>
+          <div class="review-stars">${stars}</div>
+        </div>
+        <p class="review-text">${description}</p>
+      </div>
+    `;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', loadProduct);
+</script>
+</body>
+</html>
